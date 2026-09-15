@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 2 - Filtro de Preço</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: white;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .filtro-info {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filtro-info strong {
+            color: #f5576c;
+            font-size: 18px;
+        }
+        
+        .produtos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* MISSÃO: Mude de #dcfce7 (verde) para #fef3c7 (amarelo) */
+        .card {
+            background: #fef3c7;
+        }
+        
+        .card-emoji {
+            font-size: 60px;
+            text-align: center;
+            padding: 20px;
+            background: rgba(245, 87, 108, 0.1);
+        }
+        
+        .card-body {
+            padding: 15px;
+        }
+        
+        .card-nome {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .card-preco {
+            color: #f5576c;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .card-badge {
+            display: inline-block;
+            background: #f5576c;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .info-box {
+            background: white;
+            border-left: 4px solid #f5576c;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        
+        .info-box strong {
+            color: #f5576c;
+        }
+        
+        .resultado-filtro {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            color: #666;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Filtro de Preço Máximo</h1>
+        <p class="subtitle">Loop for combinado com Decisão if</p>
+        
+        <div class="info-box">
+            <strong>💡 Conceito:</strong> O loop percorre todos os produtos e a condicional `if (produto.preco <= limite)` 
+            seleciona apenas os itens que estão dentro do limite de preço definido.
+        </div>
+        
+        <div class="filtro-info">
+            Mostrando produtos até <strong id="limite-display">R$ 20,00</strong>
+        </div>
+        
+        <div class="produtos-grid" id="produtos-filtrados"></div>
+        
+        <div class="resultado-filtro" id="resultado"></div>
+    </div>
+
+    <script>
+        // Array de 5 produtos do cardápio
+        const produtos = [
+            { nome: "Hamburger Simples", preco: 25.00, emoji: "🍔" },
+            { nome: "Refrigerante", preco: 8.50, emoji: "🥤" },
+            { nome: "Batata Frita", preco: 14.00, emoji: "🍟" },
+            { nome: "Pizza Pequena", preco: 35.00, emoji: "🍕" },
+            { nome: "Sorvete", preco: 12.00, emoji: "🍨" }
+        ];
+
+        // MISSÃO: Altere de 30.00 para 20.00
+        const limiteMaximo = 20.00;
+
+        function filtrarPorPreco() {
+            let produtosFiltrados = [];
+            
+            // LOOP FOR: Percorre todos os 5 produtos
+            for (let i = 0; i < produtos.length; i++) {
+                const produto = produtos[i];
+                
+                // CONDICIONAL IF: Verifica se o preço está dentro do limite
+                if (produto.preco <= limiteMaximo) {
+                    produtosFiltrados.push(produto);
+                    
+                    // Cria o card HTML para exibição
+                    const cardHTML = `
+                        <div class="card">
+                            <div class="card-emoji">${produto.emoji}</div>
+                            <div class="card-body">
+                                <div class="card-nome">${produto.nome}</div>
+                                <div class="card-preco">R$ ${produto.preco.toFixed(2)}</div>
+                                <span class="card-badge">✓ Em promoção</span>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('produtos-filtrados').innerHTML += cardHTML;
+                }
+            }
+            
+            // Exibe resultado
+            const total = produtosFiltrados.length;
+            document.getElementById('limite-display').textContent = `R$ ${limiteMaximo.toFixed(2)}`;
+            document.getElementById('resultado').textContent = 
+                `✅ ${total} produto(s) encontrado(s) dentro do limite de preço!`;
+        }
+
+        // Chama a função quando a página carrega
+        filtrarPorPreco();
+    </script>
+</body>
+</html>

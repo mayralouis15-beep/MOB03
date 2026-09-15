@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 1 - Somador do Carrinho</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .carrinho-item {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .item-nome {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .item-detalhes {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .item-subtotal {
+            color: #764ba2;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .resumo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .resumo-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 16px;
+        }
+        
+        .resumo-total {
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+            padding-top: 15px;
+            margin-top: 15px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 Somador do Carrinho</h1>
+        <p class="subtitle">Loop for com Variável Acumuladora</p>
+        
+        <div class="info-box">
+            <strong>💡 Conceito:</strong> A variável acumuladora soma cada item do carrinho a cada volta do loop.
+        </div>
+        
+        <div id="carrinho-display"></div>
+        
+        <div class="resumo">
+            <div class="resumo-item">
+                <span>Subtotal:</span>
+                <span id="subtotal">R$ 0,00</span>
+            </div>
+            <div class="resumo-item">
+                <span>Taxa Entrega:</span>
+                <span id="taxa">R$ 8,00</span>
+            </div>
+            <div class="resumo-total">
+                <span>Total:</span>
+                <span id="total">R$ 0,00</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Array de produtos do carrinho
+        const carrinho = [
+            { nome: "Hamburger", preco: 35.00, qtd: 2 },
+            { nome: "Refrigerante", preco: 8.50, qtd: 3 },
+            { nome: "Sorvete", preco: 15.00, qtd: 1 },
+            { nome: "Batata Frita", preco: 14.00, qtd: 1 }  // MISSÃO: Item adicionado
+        ];
+
+        // Taxa de entrega fixa
+        const taxaEntrega = 8.00;  // MISSÃO: Você pode alterar este valor
+
+        // Função para calcular o total
+        function calcularTotal() {
+            let total = 0;  // Variável acumuladora inicializada em zero
+            
+            // LOOP FOR: Percorre cada item do carrinho
+            for (let i = 0; i < carrinho.length; i++) {
+                const item = carrinho[i];
+                const subtotalItem = item.preco * item.qtd;
+                total = total + subtotalItem;  // ACUMULA o valor
+                
+                // Exibe cada item na tela
+                const itemHTML = `
+                    <div class="carrinho-item">
+                        <div class="item-nome">${item.nome}</div>
+                        <div class="item-detalhes">
+                            Preço: R$ ${item.preco.toFixed(2)} × ${item.qtd} unidades
+                        </div>
+                        <div class="item-subtotal">
+                            Subtotal: R$ ${subtotalItem.toFixed(2)}
+                        </div>
+                    </div>
+                `;
+                document.getElementById('carrinho-display').innerHTML += itemHTML;
+            }
+            
+            // Adiciona a taxa de entrega ao total
+            const totalComTaxa = total + taxaEntrega;
+            
+            // Exibe os resultados na tela
+            document.getElementById('subtotal').textContent = `R$ ${total.toFixed(2)}`;
+            document.getElementById('taxa').textContent = `R$ ${taxaEntrega.toFixed(2)}`;
+            document.getElementById('total').textContent = `R$ ${totalComTaxa.toFixed(2)}`;
+        }
+
+        // Chama a função quando a página carrega
+        calcularTotal();
+    </script>
+</body>
+</html>

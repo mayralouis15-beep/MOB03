@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 4 - Fila de Cozinha</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: white;
+            margin-bottom: 10px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            color: rgba(255, 255, 255, 0.95);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .info-box {
+            background: white;
+            border-left: 4px solid #ff6b6b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        
+        .info-box strong {
+            color: #ff6b6b;
+        }
+        
+        .controles {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+        }
+        
+        .btn-simular {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn-simular:hover {
+            transform: scale(1.02);
+        }
+        
+        .btn-simular:active {
+            transform: scale(0.98);
+        }
+        
+        .resultado {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .log-container {
+            max-height: 400px;
+            overflow-y: auto;
+            background: #f9f9f9;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .log-item {
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            background: white;
+            border-left: 4px solid #ff6b6b;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .log-item.preparando {
+            border-left-color: #ffa500;
+            background: #fff8f0;
+        }
+        
+        .log-item.concluido {
+            border-left-color: #51cf66;
+            background: #f0fdf4;
+        }
+        
+        .log-item.finalizacao {
+            border-left-color: #64b5f6;
+            background: #e3f2fd;
+            font-weight: bold;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .vazio {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⏳ Simulador de Fila de Cozinha</h1>
+        <p class="subtitle">Usando Loop while para processar pedidos</p>
+        
+        <div class="info-box">
+            <strong>💡 Conceito:</strong> O loop `while (pedidosPendentes > 0)` simula a cozinha preparando pedidos 
+            um por um até que a fila seja zerada. A cada iteração, um pedido é preparado e o contador diminui.
+        </div>
+        
+        <div class="controles">
+            <div class="input-group">
+                <label for="pedidos">⏱️ Quantos pedidos começam na fila?</label>
+                <input type="number" id="pedidos" value="8" min="1" max="20">
+            </div>
+            <button class="btn-simular" onclick="iniciarSimulacao()">
+                🚀 Iniciar Simulação
+            </button>
+        </div>
+        
+        <div class="resultado">
+            <div class="log-container" id="log">
+                <div class="vazio">Clique em "Iniciar Simulação" para começar</div>
+            </div>
+            <div class="status" id="status">Aguardando simulação...</div>
+        </div>
+    </div>
+
+    <script>
+        function iniciarSimulacao() {
+            // Limpa o log anterior
+            const log = document.getElementById('log');
+            log.innerHTML = '';
+            
+            // MISSÃO: Altere de 5 para 8
+            let pedidosPendentes = parseInt(document.getElementById('pedidos').value);
+            let pedidosPreparados = 0;
+            
+            // Adiciona mensagem inicial
+            adicionarLog(`👨‍🍳 Cozinha aberta com ${pedidosPendentes} pedidos na fila!`, 'preparando');
+            
+            // LOOP WHILE: Repete enquanto há pedidos na fila
+            while (pedidosPendentes > 0) {
+                pedidosPreparados++;
+                adicionarLog(`🔥 Preparando pedido #${pedidosPreparados}...`, 'preparando');
+                
+                // Simula o tempo de preparo
+                setTimeout(() => {}, 100);
+                
+                // Decrementa o contador
+                pedidosPendentes--;
+                
+                // Exibe status de conclusão
+                if (pedidosPendentes === 0) {
+                    adicionarLog(`✅ Pedido #${pedidosPreparados} pronto! Chamando cliente...`, 'concluido');
+                } else {
+                    adicionarLog(`✅ Pedido #${pedidosPreparados} pronto! Próximo...`, 'concluido');
+                }
+            }
+            
+            // Após o while terminar
+            adicionarLog(`🧹 Cozinha fechada para higienização!`, 'finalizacao');
+            
+            // Atualiza o status final
+            document.getElementById('status').innerHTML = 
+                `✅ Simulação concluída! ${pedidosPreparados} pedidos foram preparados.`;
+        }
+        
+        function adicionarLog(mensagem, tipo = '') {
+            const log = document.getElementById('log');
+            
+            // Limpa mensagem padrão na primeira execução
+            if (log.querySelector('.vazio')) {
+                log.innerHTML = '';
+            }
+            
+            const item = document.createElement('div');
+            item.className = `log-item ${tipo}`;
+            item.textContent = mensagem;
+            log.appendChild(item);
+            
+            // Scroll automático para o final
+            log.scrollTop = log.scrollHeight;
+        }
+    </script>
+</body>
+</html>
